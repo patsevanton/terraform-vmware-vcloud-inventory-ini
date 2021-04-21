@@ -1,1 +1,2 @@
 .terraform/plugins/selections.json
+terraform.tfvars
