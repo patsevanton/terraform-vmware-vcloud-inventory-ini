@@ -4,7 +4,6 @@ variable "vcd_org_user" {
 }
 
 variable "vcd_org_password" {
-  default     = "password"
   description = "vCD Tenant Password"
 }
 
@@ -45,4 +44,8 @@ variable "vcd_org_catalog" {
 variable "template_vm" {
   description = "template vm"
   default = "CentOS-7.6-x86_64-Minimal-1810_en"
+}
+
+variable "vm_password" {
+  description = "vm password"
 }
