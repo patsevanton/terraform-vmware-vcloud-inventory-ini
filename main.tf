@@ -1,18 +1,21 @@
 terraform {
-  # Версия terraform
-  required_version = ">=0.12.0"
+  required_providers {
+    vcd = {
+      source  = "vmware/vcd"
+      version = "3.0.0"
+    }
+  }
 }
-
 # Настройка провайдера для подключения к vCloud Director
 provider "vcd" {
-  version              = "~> 2.6"
-  user                 = var.vcd_org_user
-  password             = var.vcd_org_password
-  org                  = var.vcd_org_org
-  vdc                  = var.vcd_org_vdc
-  url                  = var.vcd_org_url
-  allow_unverified_ssl = var.vcd_org_allow_unverified_ssl
-  max_retry_timeout    = var.vcd_org_max_retry_timeout
+  user                 = var.vcd_user
+  password             = var.vcd_pass
+  auth_type            = var.auth_type
+  org                  = var.vcd_org
+  vdc                  = var.vcd
+  url                  = var.vcd_url
+  max_retry_timeout    = 30
+  allow_unverified_ssl = true
 }
 
 # Создание маршрутизируемой сети
