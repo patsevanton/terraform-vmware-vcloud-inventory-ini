@@ -6,7 +6,8 @@ terraform {
     }
   }
 }
-# Настройка провайдера для подключения к vCloud Director
+
+# Configure the VMware vCloud Director Provider
 provider "vcd" {
   user                 = var.vcd_org_user
   password             = var.vcd_org_password
@@ -18,48 +19,58 @@ provider "vcd" {
   allow_unverified_ssl = true
 }
 
-resource "vcd_vapp" "apatsev" {
-  name     = "apatsev"
-  power_on = "true"
+# This resource will destroy (potentially immediately) after null_resource.next
+resource "null_resource" "previous" {}
+
+resource "time_sleep" "wait" {
+  depends_on = [null_resource.previous]
+  create_duration = "150s"
 }
 
-resource "vcd_vapp_org_network" "vapp-network" {
-  vapp_name        = vcd_vapp.apatsev.name
-  org_network_name = "NET01"
+### NETWORKING ###
+# Create routed org-network
+resource "vcd_network_routed" "MyAppNet" {
+  name = "MyAppNet"
+  edge_gateway = "patsev_EDGE"
+  gateway = "10.1.0.1"
+  dhcp_pool {
+    start_address = "10.1.0.15"
+    end_address = "10.1.0.20"
+
+  }
+
 }
 
-resource "vcd_vapp_vm" "apatsev" {
-  vapp_name     = vcd_vapp.apatsev.name
-  name          = "apatsev"
+### vApp and VMs ###
+# vApp Name and Metadata
+resource "vcd_vapp" "MyApp" {
+  name = "MyApp"
+  metadata = {
+    TestCycle = "123-A"
+  }
+
+}
+
+# vApp network connected to routed org-network
+resource "vcd_vapp_org_network" "MyAppNet" {
+  vapp_name = "MyApp"
+  org_network_name = vcd_network_routed.MyAppNet.name
+
+}
+
+# vApp VM 1
+resource "vcd_vapp_vm" "WebServer" {
+  vapp_name = vcd_vapp.MyApp.name
+  name = "WebServer"
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
-  memory        = 512
-  cpus          = 1
-  cpu_cores     = 1
-
-  # network {
-  #   type               = "org"
-  #   name               = vcd_vapp_org_network.vapp-network.org_network_name
-  #   ip                 = "192.168.199.211"
-  #   ip_allocation_mode = "MANUAL"
-
-  # }
+  memory = 512
+  cpus = 1
 
   network {
-    type               = "org"
-    name               = vcd_vapp_org_network.vapp-network.org_network_name
-    ip                 = ""
-    ip_allocation_mode = "POOL"
-    is_primary         = true
+    type = "org"
+    name = vcd_network_routed.MyAppNet.name
+    ip_allocation_mode = "DHCP"
   }
-
-  customization {
-    enabled                    = true
-    allow_local_admin_password = true
-    admin_password             = var.vm_password
-    auto_generate_password     = false
-  }
-
-  depends_on = [vcd_vapp.apatsev]
 
 }

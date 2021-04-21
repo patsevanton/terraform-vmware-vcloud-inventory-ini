@@ -43,7 +43,7 @@ variable "vcd_org_catalog" {
 
 variable "template_vm" {
   description = "template vm"
-  default = "CentOS-7.6-x86_64-Minimal-1810_en"
+  default     = "CentOS-7.6-x86_64-Minimal-1810_en"
 }
 
 variable "vm_password" {
