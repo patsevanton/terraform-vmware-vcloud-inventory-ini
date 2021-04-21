@@ -1,0 +1,10 @@
+vcd_org_url                  = "https://some.domain.ru/api"
+vcd_org_user                 = "administrator"
+vcd_org_password             = "some_password"
+vcd_org_org                  = "some_org"
+vcd_org_vdc                  = "some_org_vdc"
+vcd_org_allow_unverified_ssl = true
+vcd_org_max_retry_timeout    = 1800
+vcd_org_edge_name            = "some_edge_name"
+vcd_org_catalog              = "Public templates"
+template_vm                  = "CentOS-7.6-x86_64-Minimal-1810_en"
