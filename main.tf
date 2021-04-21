@@ -34,13 +34,23 @@ resource "vcd_vapp_vm" "apatsev" {
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
   memory        = 512
+  cpus          = 1
+  cpu_cores     = 1
+
+  # network {
+  #   type               = "org"
+  #   name               = vcd_vapp_org_network.vapp-network.org_network_name
+  #   ip                 = "192.168.199.211"
+  #   ip_allocation_mode = "MANUAL"
+
+  # }
 
   network {
     type               = "org"
     name               = vcd_vapp_org_network.vapp-network.org_network_name
-    ip                 = "192.168.199.211"
-    ip_allocation_mode = "MANUAL"
-
+    ip                 = ""
+    ip_allocation_mode = "POOL"
+    is_primary         = true
   }
 
   customization {
