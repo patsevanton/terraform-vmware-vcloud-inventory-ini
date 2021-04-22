@@ -19,15 +19,6 @@ provider "vcd" {
   allow_unverified_ssl = true
 }
 
-# This resource will destroy (potentially immediately) after null_resource.next
-resource "null_resource" "previous" {}
-
-resource "time_sleep" "wait" {
-  depends_on = [null_resource.previous]
-  create_duration = "150s"
-}
-
-### NETWORKING ###
 # Create routed org-network
 resource "vcd_network_routed" "MyAppNet" {
   name = "MyAppNet"
@@ -36,29 +27,21 @@ resource "vcd_network_routed" "MyAppNet" {
   dhcp_pool {
     start_address = "10.1.0.15"
     end_address = "10.1.0.20"
-
   }
-
 }
 
-### vApp and VMs ###
 # vApp Name and Metadata
 resource "vcd_vapp" "MyApp" {
   name = "MyApp"
-  metadata = {
-    TestCycle = "123-A"
-  }
-
+  power_on = "true"
 }
 
 # vApp network connected to routed org-network
 resource "vcd_vapp_org_network" "MyAppNet" {
   vapp_name = "MyApp"
   org_network_name = vcd_network_routed.MyAppNet.name
-
 }
 
-# vApp VM 1
 resource "vcd_vapp_vm" "WebServer" {
   vapp_name = vcd_vapp.MyApp.name
   name = "WebServer"
@@ -72,5 +55,5 @@ resource "vcd_vapp_vm" "WebServer" {
     name = vcd_network_routed.MyAppNet.name
     ip_allocation_mode = "DHCP"
   }
-
+  depends_on = [vcd_vapp.MyApp]
 }
