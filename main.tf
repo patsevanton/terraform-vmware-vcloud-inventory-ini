@@ -22,7 +22,7 @@ provider "vcd" {
 # Create routed org-network
 resource "vcd_network_routed" "MyAppNet" {
   name = "MyAppNet"
-  edge_gateway = "patsev_EDGE"
+  edge_gateway = var.vcd_org_edge_name
   gateway = "10.1.0.1"
   dhcp_pool {
     start_address = "10.1.0.15"
