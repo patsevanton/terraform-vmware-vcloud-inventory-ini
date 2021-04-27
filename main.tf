@@ -22,7 +22,7 @@ provider "vcd" {
 # Create routed org-network
 resource "vcd_network_routed" "MyAppNet" {
   name = "MyAppNet"
-  edge_gateway = "patsev_EDGE"
+  edge_gateway = var.vcd_org_edge_name
   gateway = "10.1.0.1"
   dhcp_pool {
     start_address = "10.1.0.15"
@@ -48,7 +48,8 @@ resource "vcd_vapp_vm" "WebServer" {
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
   memory = 512
-  cpus = 1
+  cpus       = 2
+  cpu_cores  = 2
 
   network {
     type = "org"
