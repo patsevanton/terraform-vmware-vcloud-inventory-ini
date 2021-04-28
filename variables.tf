@@ -49,3 +49,13 @@ variable "template_vm" {
 variable "vm_password" {
   description = "vm password"
 }
+
+variable "create_webserver" {
+  type = string
+  default = "true"
+}
+
+variable "create_db" {
+  type = string
+  default = "true"
+}
