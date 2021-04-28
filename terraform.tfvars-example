@@ -9,3 +9,5 @@ vcd_org_edge_name            = "some_edge_name"
 vcd_org_catalog              = "Public templates"
 template_vm                  = "CentOS-7.6-x86_64-Minimal-1810_en"
 vm_password                  = ""
+create_webserver             = true
+create_db                    = true

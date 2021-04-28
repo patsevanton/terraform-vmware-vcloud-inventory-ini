@@ -43,8 +43,27 @@ resource "vcd_vapp_org_network" "MyAppNet" {
 }
 
 resource "vcd_vapp_vm" "WebServer" {
+  count = var.create_webserver ? 1 : 0
   vapp_name     = vcd_vapp.MyApp.name
   name          = "WebServer"
+  catalog_name  = var.vcd_org_catalog
+  template_name = var.template_vm
+  memory        = 512
+  cpus          = 2
+  cpu_cores     = 2
+
+  network {
+    type               = "org"
+    name               = vcd_network_routed.MyAppNet.name
+    ip_allocation_mode = "DHCP"
+  }
+  depends_on = [vcd_vapp.MyApp]
+}
+
+resource "vcd_vapp_vm" "db" {
+  count = var.create_db ? 1 : 0
+  vapp_name     = vcd_vapp.MyApp.name
+  name          = "db"
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
   memory        = 512
