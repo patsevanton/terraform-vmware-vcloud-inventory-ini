@@ -43,9 +43,9 @@ resource "vcd_vapp_org_network" "MyAppNet" {
 }
 
 resource "vcd_vapp_vm" "WebServer" {
-  count = var.create_webserver ? 1 : 0
+  count = var.create_webserver ? 2 : 0
   vapp_name     = vcd_vapp.MyApp.name
-  name          = "WebServer"
+  name          = "WebServer${count.index}"
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
   memory        = 512
@@ -61,9 +61,9 @@ resource "vcd_vapp_vm" "WebServer" {
 }
 
 resource "vcd_vapp_vm" "db" {
-  count = var.create_db ? 1 : 0
+  count = var.create_db ? 2 : 0
   vapp_name     = vcd_vapp.MyApp.name
-  name          = "db"
+  name          = "db${count.index}"
   catalog_name  = var.vcd_org_catalog
   template_name = var.template_vm
   memory        = 512
